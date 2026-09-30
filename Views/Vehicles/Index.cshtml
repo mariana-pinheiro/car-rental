@@ -1,0 +1,194 @@
+@model IEnumerable<CarRental.Models.Vehicle>
+
+@{
+    ViewData["Title"] = "Veículos";
+
+    var totalVehicles = Model.Count();
+}
+
+<div class="page-header">
+    <div>
+        <h1>Veículos</h1>
+        <p>Gira e acompanhe todos os veículos da sua frota.</p>
+    </div>
+
+    <a asp-action="Create" class="btn btn-primary">
+        + Novo veículo
+    </a>
+</div>
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <span>Total de veículos</span>
+            <strong>@totalVehicles</strong>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <span>Disponíveis</span>
+            <strong>—</strong>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <span>Alugados</span>
+            <strong>—</strong>
+        </div>
+    </div>
+
+</div>
+
+<div class="app-card">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="section-title">Frota</h2>
+            <p class="section-description">
+                Consulte os veículos registados no sistema.
+            </p>
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="search-box" style="width: 300px;">
+                <input
+                    type="text"
+                    id="vehicleSearch"
+                    placeholder="Pesquisar veículo..." />
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+
+            <div class="empty-state-icon">
+                ◇
+            </div>
+
+            <h3>A sua frota está vazia</h3>
+
+            <p class="mb-4">
+                Ainda não existem veículos registados.
+                Adicione o primeiro veículo para começar.
+            </p>
+
+            <a asp-action="Create" class="btn btn-primary">
+                + Adicionar primeiro veículo
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table" id="vehiclesTable">
+
+                <thead>
+                    <tr>
+                        <th>Veículo</th>
+                        <th>Matrícula</th>
+                        <th>Ano</th>
+                        <th>Combustível</th>
+                        <th>Estado</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var vehicle in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                <strong>@vehicle.Brand</strong>
+                                <span class="d-block text-secondary">
+                                    @vehicle.Model
+                                </span>
+                            </td>
+
+                            <td>
+                                @vehicle.LicensePlate
+                            </td>
+
+                            <td>
+                                @vehicle.ManufacturingYear
+                            </td>
+
+                            <td>
+                                @vehicle.FuelType
+                            </td>
+
+                            <td>
+                                <span class="status-badge status-available">
+                                    Disponível
+                                </span>
+                            </td>
+
+                            <td class="text-end">
+
+                                <a asp-action="Details"
+                                   asp-route-id="@vehicle.Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Ver
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@vehicle.Id"
+                                   class="btn btn-sm btn-outline-secondary">
+                                    Editar
+                                </a>
+
+                                <a asp-action="Delete"
+                                   asp-route-id="@vehicle.Id"
+                                   class="btn btn-sm btn-outline-danger">
+                                    Eliminar
+                                </a>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+
+    <script>
+        const searchInput = document.getElementById("vehicleSearch");
+
+        if (searchInput) {
+            searchInput.addEventListener("input", function () {
+
+                const searchValue = this.value.toLowerCase();
+
+                const rows = document.querySelectorAll(
+                    "#vehiclesTable tbody tr"
+                );
+
+                rows.forEach(row => {
+
+                    const vehicle = row.textContent.toLowerCase();
+
+                    row.style.display =
+                        vehicle.includes(searchValue) ? "" : "none";
+                });
+            });
+        }
+    </script>
+
+}

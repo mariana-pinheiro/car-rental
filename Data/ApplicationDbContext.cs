@@ -13,4 +13,17 @@ public class ApplicationDbContext : DbContext
     public DbSet<Vehicle> Vehicles { get; set; }
     public DbSet<Client> Clients { get; set; }
     public DbSet<RentalContract> RentalContracts { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Vehicle>()
+            .HasIndex(v => v.LicensePlate)
+            .IsUnique();
+
+        modelBuilder.Entity<Client>()
+            .HasIndex(c => c.Email)
+            .IsUnique();
+    }
 }

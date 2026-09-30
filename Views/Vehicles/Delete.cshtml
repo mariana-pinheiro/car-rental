@@ -1,0 +1,89 @@
+@model CarRental.Models.Vehicle
+
+@{
+    ViewData["Title"] = "Eliminar veículo";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Eliminar veículo</h1>
+        <p>Confirme a eliminação do veículo selecionado.</p>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        ← Voltar
+    </a>
+</div>
+
+<div class="app-card">
+
+    <div class="mb-4">
+        <h2 class="section-title">Tem a certeza?</h2>
+
+        <p class="section-description">
+            Esta ação irá remover o veículo do sistema.
+        </p>
+    </div>
+
+    <div class="p-4 rounded-3 bg-light mb-4">
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+                <label class="form-label">Veículo</label>
+                <p class="mb-0 fw-semibold">
+                    @Model.Brand @Model.Model
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Matrícula</label>
+                <p class="mb-0">
+                    @Model.LicensePlate
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Ano de fabrico</label>
+                <p class="mb-0">
+                    @Model.ManufacturingYear
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Combustível</label>
+                <p class="mb-0">
+                    @Model.FuelType
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="alert alert-danger">
+        <strong>Atenção:</strong>
+        esta ação não pode ser anulada.
+    </div>
+
+    <form asp-action="Delete" method="post">
+
+        <input type="hidden" asp-for="Id" />
+
+        <div class="d-flex justify-content-end gap-2">
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Cancelar
+            </a>
+
+            <button type="submit"
+                    class="btn btn-danger">
+                Eliminar veículo
+            </button>
+
+        </div>
+
+    </form>
+
+</div>

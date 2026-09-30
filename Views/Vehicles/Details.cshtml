@@ -1,0 +1,76 @@
+@model CarRental.Models.Vehicle
+
+@{
+    ViewData["Title"] = "Detalhes do veículo";
+}
+
+<div class="page-header">
+    <div>
+        <h1>@Model.Brand @Model.Model</h1>
+        <p>Consulte as informações do veículo.</p>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        ← Voltar
+    </a>
+</div>
+
+<div class="app-card">
+
+    <div class="mb-4">
+        <h2 class="section-title">Informações do veículo</h2>
+        <p class="section-description">
+            Dados atualmente registados no sistema.
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <label class="form-label">Marca</label>
+            <p class="mb-0">@Model.Brand</p>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Modelo</label>
+            <p class="mb-0">@Model.Model</p>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Matrícula</label>
+            <p class="mb-0">@Model.LicensePlate</p>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Ano de fabrico</label>
+            <p class="mb-0">@Model.ManufacturingYear</p>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Combustível</label>
+            <p class="mb-0">@Model.FuelType</p>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Estado</label>
+
+            <div>
+                <span class="status-badge status-available">
+                    Disponível
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+    <hr class="my-4" />
+
+    <div class="d-flex justify-content-end">
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-primary">
+            Editar veículo
+        </a>
+    </div>
+
+</div>
