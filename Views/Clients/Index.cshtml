@@ -1,0 +1,149 @@
+@model IEnumerable<CarRental.Models.Client>
+
+@{
+    ViewData["Title"] = "Clientes";
+    var totalClients = Model.Count();
+}
+
+<div class="page-header">
+    <div>
+        <h1>Clientes</h1>
+        <p>Gira os clientes registados no sistema.</p>
+    </div>
+
+    <a asp-action="Create" class="btn btn-primary">
+        + Novo cliente
+    </a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <span>Total de clientes</span>
+            <strong>@totalClients</strong>
+        </div>
+    </div>
+</div>
+
+<div class="app-card">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="section-title">Clientes</h2>
+            <p class="section-description">
+                Consulte os clientes registados no sistema.
+            </p>
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="search-box" style="width: 300px;">
+                <input type="text"
+                       id="clientSearch"
+                       placeholder="Pesquisar cliente..." />
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                ♙
+            </div>
+
+            <h3>Ainda não existem clientes</h3>
+
+            <p class="mb-4">
+                Registe o primeiro cliente para começar.
+            </p>
+
+            <a asp-action="Create" class="btn btn-primary">
+                + Adicionar primeiro cliente
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table" id="clientsTable">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Carta de condução</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var client in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@client.FullName</strong>
+                            </td>
+
+                            <td>
+                                @client.Email
+                            </td>
+
+                            <td>
+                                @client.Phone
+                            </td>
+
+                            <td>
+                                @client.DrivingLicense
+                            </td>
+
+                            <td class="text-end">
+                                <a asp-action="Details"
+                                   asp-route-id="@client.Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Ver
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@client.Id"
+                                   class="btn btn-sm btn-outline-secondary">
+                                    Editar
+                                </a>
+
+                                <a asp-action="Delete"
+                                   asp-route-id="@client.Id"
+                                   class="btn btn-sm btn-outline-danger">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+    <script>
+        const searchInput = document.getElementById("clientSearch");
+
+        if (searchInput) {
+            searchInput.addEventListener("input", function () {
+                const searchValue = this.value.toLowerCase();
+
+                const rows = document.querySelectorAll(
+                    "#clientsTable tbody tr"
+                );
+
+                rows.forEach(row => {
+                    const client = row.textContent.toLowerCase();
+
+                    row.style.display =
+                        client.includes(searchValue) ? "" : "none";
+                });
+            });
+        }
+    </script>
+}

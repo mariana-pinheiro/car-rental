@@ -1,0 +1,108 @@
+@model CarRental.Models.Client
+
+@{
+    ViewData["Title"] = "Editar cliente";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Editar cliente</h1>
+        <p>Atualize as informações de @Model.FullName.</p>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        ← Voltar
+    </a>
+</div>
+
+<div class="app-card">
+
+    <div class="mb-4">
+        <h2 class="section-title">Informações do cliente</h2>
+        <p class="section-description">
+            Altere os dados necessários e guarde as modificações.
+        </p>
+    </div>
+
+    <form asp-action="Edit" method="post">
+
+        <input type="hidden" asp-for="Id" />
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger mb-3"></div>
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+                <label asp-for="FullName" class="form-label">
+                    Nome completo
+                </label>
+
+                <input asp-for="FullName"
+                       class="form-control" />
+
+                <span asp-validation-for="FullName"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Email" class="form-label">
+                    Email
+                </label>
+
+                <input asp-for="Email"
+                       class="form-control" />
+
+                <span asp-validation-for="Email"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Phone" class="form-label">
+                    Telefone
+                </label>
+
+                <input asp-for="Phone"
+                       class="form-control" />
+
+                <span asp-validation-for="Phone"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="DrivingLicense" class="form-label">
+                    Carta de condução
+                </label>
+
+                <input asp-for="DrivingLicense"
+                       class="form-control" />
+
+                <span asp-validation-for="DrivingLicense"
+                      class="text-danger"></span>
+            </div>
+
+        </div>
+
+        <hr class="my-4" />
+
+        <div class="d-flex justify-content-end gap-2">
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Cancelar
+            </a>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Guardar alterações
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,110 @@
+@model CarRental.Models.Client
+
+@{
+    ViewData["Title"] = "Novo cliente";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Novo cliente</h1>
+        <p>Registe um novo cliente no sistema.</p>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        ← Voltar
+    </a>
+</div>
+
+<div class="app-card">
+
+    <div class="mb-4">
+        <h2 class="section-title">Informações do cliente</h2>
+        <p class="section-description">
+            Preencha os dados necessários para registar o cliente.
+        </p>
+    </div>
+
+    <form asp-action="Create" method="post">
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger mb-3"></div>
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+                <label asp-for="FullName" class="form-label">
+                    Nome completo
+                </label>
+
+                <input asp-for="FullName"
+                       class="form-control"
+                       placeholder="Ex.: Mariana Pinheiro" />
+
+                <span asp-validation-for="FullName"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Email" class="form-label">
+                    Email
+                </label>
+
+                <input asp-for="Email"
+                       class="form-control"
+                       placeholder="Ex.: mariana@email.com" />
+
+                <span asp-validation-for="Email"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Phone" class="form-label">
+                    Telefone
+                </label>
+
+                <input asp-for="Phone"
+                       class="form-control"
+                       placeholder="Ex.: 912 345 678" />
+
+                <span asp-validation-for="Phone"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="DrivingLicense" class="form-label">
+                    Carta de condução
+                </label>
+
+                <input asp-for="DrivingLicense"
+                       class="form-control"
+                       placeholder="Ex.: P-1234567" />
+
+                <span asp-validation-for="DrivingLicense"
+                      class="text-danger"></span>
+            </div>
+
+        </div>
+
+        <hr class="my-4" />
+
+        <div class="d-flex justify-content-end gap-2">
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Cancelar
+            </a>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Adicionar cliente
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

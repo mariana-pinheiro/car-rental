@@ -1,0 +1,61 @@
+@model CarRental.Models.Client
+
+@{
+    ViewData["Title"] = "Detalhes do cliente";
+}
+
+<div class="page-header">
+    <div>
+        <h1>@Model.FullName</h1>
+        <p>Consulte as informações do cliente.</p>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        ← Voltar
+    </a>
+</div>
+
+<div class="app-card">
+
+    <div class="mb-4">
+        <h2 class="section-title">Informações do cliente</h2>
+        <p class="section-description">
+            Dados atualmente registados no sistema.
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <label class="form-label">Nome completo</label>
+            <p class="mb-0">@Model.FullName</p>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <p class="mb-0">@Model.Email</p>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Telefone</label>
+            <p class="mb-0">@Model.Phone</p>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Carta de condução</label>
+            <p class="mb-0">@Model.DrivingLicense</p>
+        </div>
+
+    </div>
+
+    <hr class="my-4" />
+
+    <div class="d-flex justify-content-end">
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-primary">
+            Editar cliente
+        </a>
+    </div>
+
+</div>
