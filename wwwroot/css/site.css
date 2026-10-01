@@ -592,7 +592,7 @@ a {
         padding: 0 7px 30px;
     }
 
-    .sidebar-brand > div:last-child {
+    .sidebar-brand>div:last-child {
         display: none;
     }
 
@@ -645,5 +645,110 @@ a {
 
     .app-card {
         padding: 18px;
+    }
+
+    /* Searchable selects */
+
+    .ts-wrapper {
+        width: 100%;
+    }
+
+    .ts-wrapper.single .ts-control {
+        min-height: 44px;
+        border: 1px solid #dcdfe4;
+        border-radius: 8px;
+        padding: 10px 13px;
+        background: white;
+        color: var(--text-primary);
+        font-size: 14px;
+        box-shadow: none;
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .ts-wrapper.single .ts-control:hover {
+        border-color: #b9bec6;
+    }
+
+    .ts-wrapper.focus .ts-control {
+        border-color: var(--jap-red);
+        box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.09);
+    }
+
+    .ts-control input {
+        font-size: 14px;
+        color: var(--text-primary);
+    }
+
+    .ts-control input::placeholder {
+        color: #b0b5bd;
+    }
+
+    .ts-dropdown {
+        margin-top: 6px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+        overflow: hidden;
+    }
+
+    .ts-dropdown .option {
+        padding: 10px 13px;
+        font-size: 13px;
+        color: var(--text-primary);
+    }
+
+    .ts-dropdown .option:hover,
+    .ts-dropdown .active {
+        background: var(--jap-red-light);
+        color: var(--text-primary);
+    }
+
+    .ts-dropdown .selected {
+        background: var(--jap-red-light);
+        color: var(--jap-red);
+    }
+
+    .no-results {
+        padding: 12px 13px;
+        color: var(--text-secondary);
+        font-size: 13px;
+    }
+
+    .stat-card small {
+        display: block;
+        margin-top: 8px;
+        font-size: 13px;
+    }
+
+    .dashboard-rental {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .dashboard-rental:first-of-type {
+        padding-top: 0;
+    }
+
+    .dashboard-rental:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .dashboard-rental strong {
+        display: block;
+        font-size: 14px;
+    }
+
+    .dashboard-rental span {
+        display: block;
+        margin-top: 3px;
+        color: var(--text-secondary);
+        font-size: 13px;
     }
 }

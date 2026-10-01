@@ -1,8 +1,192 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using CarRental.Models
+
+@{
+    ViewData["Title"] = "Dashboard";
+
+    var activeContracts =
+        ViewBag.ActiveContracts as List<RentalContract>
+        ?? new List<RentalContract>();
+
+    var upcomingContracts =
+        ViewBag.UpcomingContracts as List<RentalContract>
+        ?? new List<RentalContract>();
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="page-header">
+    <div>
+        <h1>Dashboard</h1>
+        <p>Visão geral da sua frota e dos alugueres.</p>
+    </div>
+
+    <a asp-controller="RentalContracts"
+       asp-action="Create"
+       class="btn btn-primary">
+        + Novo contrato
+    </a>
+</div>
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-6 col-xl-3">
+        <div class="stat-card">
+            <span>Total de veículos</span>
+            <strong>@ViewBag.TotalVehicles</strong>
+            <small class="text-secondary">Veículos registados</small>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="stat-card">
+            <span>Disponíveis</span>
+            <strong>@ViewBag.AvailableVehicles</strong>
+            <small class="text-secondary">Prontos para aluguer</small>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="stat-card">
+            <span>Alugados</span>
+            <strong>@ViewBag.RentedVehicles</strong>
+            <small class="text-secondary">Atualmente em aluguer</small>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="stat-card">
+            <span>Clientes</span>
+            <strong>@ViewBag.TotalClients</strong>
+            <small class="text-secondary">Clientes registados</small>
+        </div>
+    </div>
+
+</div>
+
+<div class="row g-4">
+
+    <div class="col-xl-7">
+
+        <div class="app-card h-100">
+
+            <div class="mb-4">
+                <h2 class="section-title">Contratos ativos</h2>
+                <p class="section-description">
+                    Veículos atualmente em aluguer.
+                </p>
+            </div>
+
+            @if (activeContracts.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table">
+
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Veículo</th>
+                                <th>Devolução</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var contract in activeContracts)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@contract.Client?.FullName</strong>
+                                    </td>
+
+                                    <td>
+                                        @contract.Vehicle?.Brand
+                                        @contract.Vehicle?.Model
+
+                                        <span class="d-block text-secondary">
+                                            @contract.Vehicle?.LicensePlate
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        @contract.EndDate.ToString("dd/MM/yyyy")
+                                    </td>
+
+                                    <td class="text-end">
+                                        <a asp-controller="RentalContracts"
+                                           asp-action="Finish"
+                                           asp-route-id="@contract.Id"
+                                           class="btn btn-sm btn-outline-danger">
+                                            Terminar
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <h3>Sem alugueres ativos</h3>
+                    <p>Não existem veículos alugados neste momento.</p>
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+    <div class="col-xl-5">
+
+        <div class="app-card h-100">
+
+            <div class="mb-4">
+                <h2 class="section-title">Próximos alugueres</h2>
+                <p class="section-description">
+                    Contratos que começam nos próximos dias.
+                </p>
+            </div>
+
+            @if (upcomingContracts.Any())
+            {
+                @foreach (var contract in upcomingContracts)
+                {
+                    <div class="dashboard-rental">
+
+                        <div>
+                            <strong>
+                                @contract.Vehicle?.Brand
+                                @contract.Vehicle?.Model
+                            </strong>
+
+                            <span>
+                                @contract.Client?.FullName
+                            </span>
+                        </div>
+
+                        <div class="text-end">
+                            <strong>
+                                @contract.StartDate.ToString("dd/MM")
+                            </strong>
+
+                            <span>
+                                @contract.Vehicle?.LicensePlate
+                            </span>
+                        </div>
+
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <h3>Sem alugueres agendados</h3>
+                    <p>Não existem contratos futuros.</p>
+                </div>
+            }
+
+        </div>
+
+    </div>
+
 </div>
