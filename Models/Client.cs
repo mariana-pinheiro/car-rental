@@ -14,7 +14,7 @@ public class Client
     public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O telefone é obrigatório.")]
-    [Phone(ErrorMessage = "Introduza um número de telefone válido.")]
+    [RegularExpression(@"^\d+$", ErrorMessage = "O telefone deve conter apenas números.")]
     public string Phone { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "A carta de condução é obrigatória.")]

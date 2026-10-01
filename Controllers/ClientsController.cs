@@ -169,8 +169,21 @@ public class ClientsController : Controller
             return NotFound();
         }
 
+        var hasContracts = await _context.RentalContracts
+            .AnyAsync(c => c.ClientId == id);
+
+        if (hasContracts)
+        {
+            TempData["ErrorMessage"] =
+                "Não é possível eliminar este cliente porque existem contratos associados.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
         _context.Clients.Remove(client);
         await _context.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = "Cliente eliminado com sucesso.";
 
         return RedirectToAction(nameof(Index));
     }

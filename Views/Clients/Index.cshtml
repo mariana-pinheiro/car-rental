@@ -16,6 +16,26 @@
     </a>
 </div>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar">
+        </button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar">
+        </button>
+    </div>
+}
+
 <div class="row g-3 mb-4">
     <div class="col-md-4">
         <div class="stat-card">
@@ -38,9 +58,7 @@
         @if (Model.Any())
         {
             <div class="search-box" style="width: 300px;">
-                <input type="text"
-                       id="clientSearch"
-                       placeholder="Pesquisar cliente..." />
+                <input type="text" id="clientSearch" placeholder="Pesquisar cliente..." />
             </div>
         }
     </div>
@@ -97,24 +115,20 @@
                                 @client.DrivingLicense
                             </td>
 
-                            <td class="text-end">
-                                <a asp-action="Details"
-                                   asp-route-id="@client.Id"
-                                   class="btn btn-sm btn-outline-primary">
-                                    Ver
-                                </a>
+                            <td>
+                                <div class="d-flex gap-2 flex-nowrap justify-content-end">
+                                    <a asp-action="Details" asp-route-id="@client.Id" class="btn btn-outline-primary btn-sm">
+                                        Ver
+                                    </a>
 
-                                <a asp-action="Edit"
-                                   asp-route-id="@client.Id"
-                                   class="btn btn-sm btn-outline-secondary">
-                                    Editar
-                                </a>
+                                    <a asp-action="Edit" asp-route-id="@client.Id" class="btn btn-outline-secondary btn-sm">
+                                        Editar
+                                    </a>
 
-                                <a asp-action="Delete"
-                                   asp-route-id="@client.Id"
-                                   class="btn btn-sm btn-outline-danger">
-                                    Eliminar
-                                </a>
+                                    <a asp-action="Delete" asp-route-id="@client.Id" class="btn btn-outline-danger btn-sm">
+                                        Eliminar
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     }
