@@ -158,6 +158,25 @@ public class RentalContractsController : Controller
         return Json(vehicles);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> VehicleAvailability(int vehicleId)
+    {
+        var periods = await _context.RentalContracts
+            .Where(c =>
+                c.VehicleId == vehicleId &&
+                !c.CompletedAt.HasValue &&
+                !c.CancelledAt.HasValue)
+            .OrderBy(c => c.StartDate)
+            .Select(c => new
+            {
+                startDate = c.StartDate.ToString("yyyy-MM-dd"),
+                endDate = c.EndDate.ToString("yyyy-MM-dd")
+            })
+            .ToListAsync();
+
+        return Json(periods);
+    }
+
     // GET: /RentalContracts/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
