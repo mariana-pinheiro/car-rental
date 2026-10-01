@@ -17,10 +17,23 @@ public class VehiclesController : Controller
     // GET: /Vehicles
     public async Task<IActionResult> Index()
     {
+        var today = DateTime.Today;
+
         var vehicles = await _context.Vehicles
             .OrderBy(v => v.Brand)
             .ThenBy(v => v.Model)
             .ToListAsync();
+        var rentedVehicleIds = await _context.RentalContracts
+            .Where(c =>
+                !c.CompletedAt.HasValue &&
+                !c.CancelledAt.HasValue &&
+                c.StartDate <= today &&
+                c.EndDate >= today)
+            .Select(c => c.VehicleId)
+            .Distinct()
+            .ToListAsync();
+
+        ViewBag.RentedVehicleIds = rentedVehicleIds;
 
         return View(vehicles);
     }
@@ -78,6 +91,18 @@ public class VehiclesController : Controller
         {
             return NotFound();
         }
+
+        var today = DateTime.Today;
+
+        var isRented = await _context.RentalContracts
+            .AnyAsync(c =>
+                c.VehicleId == vehicle.Id &&
+                !c.CompletedAt.HasValue &&
+                !c.CancelledAt.HasValue &&
+                c.StartDate <= today &&
+                c.EndDate >= today);
+
+        ViewBag.IsRented = isRented;
 
         return View(vehicle);
     }
@@ -170,8 +195,21 @@ public class VehiclesController : Controller
             return NotFound();
         }
 
+        var hasContracts = await _context.RentalContracts
+            .AnyAsync(c => c.VehicleId == id);
+
+        if (hasContracts)
+        {
+            TempData["ErrorMessage"] =
+                "Não é possível eliminar este veículo porque existem contratos associados.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
         _context.Vehicles.Remove(vehicle);
         await _context.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = "Veículo eliminado com sucesso.";
 
         return RedirectToAction(nameof(Index));
     }

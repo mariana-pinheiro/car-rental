@@ -55,9 +55,18 @@
             <label class="form-label">Estado</label>
 
             <div>
-                <span class="status-badge status-available">
-                    Disponível
-                </span>
+                @if (ViewBag.IsRented == true)
+                {
+                    <span class="status-badge status-rented">
+                        Alugado
+                    </span>
+                }
+                else
+                {
+                    <span class="status-badge status-available">
+                        Disponível
+                    </span>
+                }
             </div>
         </div>
 
@@ -66,9 +75,7 @@
     <hr class="my-4" />
 
     <div class="d-flex justify-content-end">
-        <a asp-action="Edit"
-           asp-route-id="@Model.Id"
-           class="btn btn-primary">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
             Editar veículo
         </a>
     </div>

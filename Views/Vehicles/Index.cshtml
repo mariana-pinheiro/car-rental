@@ -3,7 +3,13 @@
 @{
     ViewData["Title"] = "Veículos";
 
+    var rentedVehicleIds =
+        ViewBag.RentedVehicleIds as List<int>
+        ?? new List<int>();
+
     var totalVehicles = Model.Count();
+    var rentedVehicles = rentedVehicleIds.Count;
+    var availableVehicles = totalVehicles - rentedVehicles;
 }
 
 <div class="page-header">
@@ -16,6 +22,25 @@
         + Novo veículo
     </a>
 </div>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar">
+        </button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar">
+        </button>
+    </div>
+}
 
 <div class="row g-3 mb-4">
 
@@ -29,14 +54,14 @@
     <div class="col-md-4">
         <div class="stat-card">
             <span>Disponíveis</span>
-            <strong>—</strong>
+            <strong>@availableVehicles</strong>
         </div>
     </div>
 
     <div class="col-md-4">
         <div class="stat-card">
             <span>Alugados</span>
-            <strong>—</strong>
+            <strong>@rentedVehicles</strong>
         </div>
     </div>
 
@@ -55,10 +80,7 @@
         @if (Model.Any())
         {
             <div class="search-box" style="width: 300px;">
-                <input
-                    type="text"
-                    id="vehicleSearch"
-                    placeholder="Pesquisar veículo..." />
+                <input type="text" id="vehicleSearch" placeholder="Pesquisar veículo..." />
             </div>
         }
     </div>
@@ -105,6 +127,7 @@
 
                     @foreach (var vehicle in Model)
                     {
+                        var isRented = rentedVehicleIds.Contains(vehicle.Id);
                         <tr>
 
                             <td>
@@ -125,30 +148,32 @@
                             <td>
                                 @vehicle.FuelType
                             </td>
-
                             <td>
-                                <span class="status-badge status-available">
-                                    Disponível
-                                </span>
+                                @if (isRented)
+                                {
+                                    <span class="status-badge status-rented">
+                                        Alugado
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-available">
+                                        Disponível
+                                    </span>
+                                }
                             </td>
 
                             <td class="text-end">
 
-                                <a asp-action="Details"
-                                   asp-route-id="@vehicle.Id"
-                                   class="btn btn-sm btn-outline-primary">
+                                <a asp-action="Details" asp-route-id="@vehicle.Id" class="btn btn-sm btn-outline-primary">
                                     Ver
                                 </a>
 
-                                <a asp-action="Edit"
-                                   asp-route-id="@vehicle.Id"
-                                   class="btn btn-sm btn-outline-secondary">
+                                <a asp-action="Edit" asp-route-id="@vehicle.Id" class="btn btn-sm btn-outline-secondary">
                                     Editar
                                 </a>
 
-                                <a asp-action="Delete"
-                                   asp-route-id="@vehicle.Id"
-                                   class="btn btn-sm btn-outline-danger">
+                                <a asp-action="Delete" asp-route-id="@vehicle.Id" class="btn btn-sm btn-outline-danger">
                                     Eliminar
                                 </a>
 
