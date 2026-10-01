@@ -1,0 +1,187 @@
+@model CarRental.Models.RentalContract
+
+@{
+    ViewData["Title"] = "Detalhes do contrato";
+
+    var today = DateTime.Today;
+
+    var isCompleted = Model.CompletedAt.HasValue;
+
+    var isCancelled = Model.CancelledAt.HasValue;
+
+    var isActive =
+        !isCompleted &&
+        !isCancelled &&
+        Model.StartDate.Date <= today &&
+        Model.EndDate.Date >= today;
+
+    var isFuture =
+        !isCompleted &&
+        !isCancelled &&
+        Model.StartDate.Date > today;
+}
+
+<div class="page-header">
+    <div>
+        <h1>Detalhes do contrato</h1>
+        <p>Consulte todas as informações do aluguer.</p>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        ← Voltar
+    </a>
+</div>
+
+<div class="app-card">
+
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2 class="section-title">Informações do aluguer</h2>
+            <p class="section-description">
+                Contrato #@Model.Id
+            </p>
+        </div>
+
+        <div>
+            @if (isCancelled)
+            {
+                <span class="status-badge status-cancelled">
+                    Cancelado
+                </span>
+            }
+            else if (isCompleted)
+            {
+                <span class="status-badge status-finished">
+                    Concluído
+                </span>
+            }
+            else if (isActive)
+            {
+                <span class="status-badge status-rented">
+                    Ativo
+                </span>
+            }
+            else if (isFuture)
+            {
+                <span class="status-badge status-scheduled">
+                    Agendado
+                </span>
+            }
+            else
+            {
+                <span class="status-badge status-finished">
+                    Por concluir
+                </span>
+            }
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <label class="form-label">Cliente</label>
+            <p class="mb-0">
+                <strong>@Model.Client?.FullName</strong>
+            </p>
+            <span class="text-secondary">
+                @Model.Client?.Email
+            </span>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Veículo</label>
+            <p class="mb-0">
+                <strong>
+                    @Model.Vehicle?.Brand @Model.Vehicle?.Model
+                </strong>
+            </p>
+            <span class="text-secondary">
+                @Model.Vehicle?.LicensePlate
+            </span>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Data de início</label>
+            <p class="mb-0">
+                @Model.StartDate.ToString("dd/MM/yyyy")
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Data de fim prevista</label>
+            <p class="mb-0">
+                @Model.EndDate.ToString("dd/MM/yyyy")
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Quilometragem inicial</label>
+            <p class="mb-0">
+                @Model.InitialMileage.ToString("N0") km
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Quilometragem final</label>
+
+            @if (Model.FinalMileage.HasValue)
+            {
+                <p class="mb-0">
+                    @Model.FinalMileage.Value.ToString("N0") km
+                </p>
+            }
+            else
+            {
+                <p class="mb-0 text-secondary">
+                    Ainda não registada
+                </p>
+            }
+        </div>
+
+        @if (Model.CompletedAt.HasValue)
+        {
+            <div class="col-md-6">
+                <label class="form-label">Aluguer concluído em</label>
+                <p class="mb-0">
+                    @Model.CompletedAt.Value.ToString("dd/MM/yyyy HH:mm")
+                </p>
+            </div>
+        }
+
+    </div>
+
+    <hr class="my-4" />
+
+    <div class="d-flex justify-content-end gap-2">
+        @if (isFuture)
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary">
+                Editar
+            </a>
+
+            <a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-danger">
+                Cancelar contrato
+            </a>
+        }
+
+        else if (isActive)
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary">
+                Editar
+            </a>
+
+            <a asp-action="Finish" asp-route-id="@Model.Id" class="btn btn-primary">
+                Terminar aluguer
+            </a>
+        }
+
+        else if (!isCompleted && !isCancelled)
+        {
+            <a asp-action="Finish" asp-route-id="@Model.Id" class="btn btn-primary">
+                Terminar aluguer
+            </a>
+        }
+
+    </div>
+
+</div>

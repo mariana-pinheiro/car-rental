@@ -1,0 +1,274 @@
+@model IEnumerable<CarRental.Models.RentalContract>
+
+@{
+    ViewData["Title"] = "Contratos";
+
+    var totalContracts = Model.Count();
+    var today = DateTime.Today;
+    var activeContracts = Model.Count(c =>
+        !c.CompletedAt.HasValue &&
+        !c.CancelledAt.HasValue &&
+        c.StartDate.Date <= today &&
+        c.EndDate.Date >= today);
+}
+
+<div class="page-header">
+    <div>
+        <h1>Contratos de aluguer</h1>
+        <p>Gira e acompanhe os alugueres registados no sistema.</p>
+    </div>
+
+    <a asp-action="Create" class="btn btn-primary">
+        + Novo contrato
+    </a>
+</div>
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <span>Total de contratos</span>
+            <strong>@totalContracts</strong>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <span>Contratos ativos</span>
+            <strong>@activeContracts</strong>
+        </div>
+    </div>
+
+</div>
+
+<div class="app-card">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="section-title">Alugueres</h2>
+            <p class="section-description">
+                Consulte os contratos registados no sistema.
+            </p>
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="search-box" style="width: 300px;">
+                <input type="text" id="contractSearch" placeholder="Pesquisar contrato..." />
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+
+            <div class="empty-state-icon">
+                ▤
+            </div>
+
+            <h3>Ainda não existem contratos</h3>
+
+            <p class="mb-4">
+                Registe o primeiro aluguer para começar.
+            </p>
+
+            <a asp-action="Create" class="btn btn-primary">
+                + Adicionar primeiro contrato
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table" id="contractsTable">
+
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Veículo</th>
+                        <th>Período</th>
+                        <th>Quilometragem</th>
+                        <th>Estado</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var contract in Model)
+                    {
+                        var isCompleted = contract.CompletedAt.HasValue;
+                        var isCancelled = contract.CancelledAt.HasValue;
+
+                        var isActive =
+                            !isCompleted &&
+                            !isCancelled &&
+                            contract.StartDate.Date <= today &&
+                            contract.EndDate.Date >= today;
+
+                        var isFuture =
+                            !isCompleted &&
+                            !isCancelled &&
+                            contract.StartDate.Date > today;
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    @contract.Client?.FullName
+                                </strong>
+                            </td>
+
+                            <td>
+                                <strong>
+                                    @contract.Vehicle?.Brand
+                                    @contract.Vehicle?.Model
+                                </strong>
+
+                                <span class="d-block text-secondary">
+                                    @contract.Vehicle?.LicensePlate
+                                </span>
+                            </td>
+
+                            <td>
+                                @contract.StartDate.ToString("dd/MM/yyyy")
+
+                                <span class="text-secondary">
+                                    →
+                                </span>
+
+                                @contract.EndDate.ToString("dd/MM/yyyy")
+                            </td>
+
+                            <td>
+                                @contract.InitialMileage.ToString("N0") km
+                                →
+
+                                @if (contract.FinalMileage.HasValue)
+                                {
+                                    @($"{contract.FinalMileage.Value:N0} km")
+                                }
+                                else
+                                {
+                                    <span class="text-secondary">—</span>
+                                }
+                            </td>
+
+                            <td>
+                                @if (isCancelled)
+                                {
+                                    <span class="status-badge status-cancelled">
+                                        Cancelado
+                                    </span>
+                                }
+                                else if (isCompleted)
+                                {
+                                    <span class="status-badge status-finished">
+                                        Concluído
+                                    </span>
+                                }
+                                else if (isActive)
+                                {
+                                    <span class="status-badge status-rented">
+                                        Ativo
+                                    </span>
+                                }
+                                else if (isFuture)
+                                {
+                                    <span class="status-badge status-scheduled">
+                                        Agendado
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-finished">
+                                        Por concluir
+                                    </span>
+                                }
+                            </td>
+
+                            <td class="text-end">
+
+                                <div class="d-flex gap-2 flex-nowrap justify-content-end">
+
+                                    <a asp-action="Details" asp-route-id="@contract.Id" class="btn btn-sm btn-outline-danger">
+                                        Ver
+                                    </a>
+
+                                    @if (isFuture)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@contract.Id" class="btn btn-sm btn-outline-secondary">
+                                            Editar
+                                        </a>
+
+                                        <a asp-action="Cancel" asp-route-id="@contract.Id" class="btn btn-sm btn-outline-danger">
+                                            Cancelar
+                                        </a>
+                                    }
+
+                                    else if (isActive)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@contract.Id" class="btn btn-sm btn-outline-secondary">
+                                            Editar
+                                        </a>
+
+                                        <a asp-action="Finish" asp-route-id="@contract.Id" class="btn btn-sm btn-outline-danger">
+                                            Terminar
+                                        </a>
+                                    }
+
+                                    else if (!isCompleted && !isCancelled)
+                                    {
+                                        <a asp-action="Finish" asp-route-id="@contract.Id" class="btn btn-sm btn-outline-danger">
+                                            Terminar
+                                        </a>
+                                    }
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+
+    <script>
+        const searchInput = document.getElementById("contractSearch");
+
+        if (searchInput) {
+            searchInput.addEventListener("input", function () {
+
+                const searchValue = this.value.toLowerCase();
+
+                const rows = document.querySelectorAll(
+                    "#contractsTable tbody tr"
+                );
+
+                rows.forEach(row => {
+
+                    const contract =
+                        row.textContent.toLowerCase();
+
+                    row.style.display =
+                        contract.includes(searchValue)
+                            ? ""
+                            : "none";
+                });
+            });
+        }
+    </script>
+
+}

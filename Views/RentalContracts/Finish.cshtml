@@ -1,0 +1,110 @@
+@model CarRental.Models.RentalContract
+
+@{
+    ViewData["Title"] = "Terminar aluguer";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Terminar aluguer</h1>
+        <p>Registe a devolução do veículo e conclua o contrato.</p>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        ← Voltar
+    </a>
+</div>
+
+<div class="app-card">
+
+    <div class="mb-4">
+        <h2 class="section-title">Dados da devolução</h2>
+        <p class="section-description">
+            Confirme os dados do aluguer e indique a quilometragem final.
+        </p>
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-6">
+            <label class="form-label">Cliente</label>
+            <div class="form-control bg-light">
+                @Model.Client?.FullName
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Veículo</label>
+            <div class="form-control bg-light">
+                @Model.Vehicle?.Brand @Model.Vehicle?.Model
+                · @Model.Vehicle?.LicensePlate
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Período do aluguer</label>
+            <div class="form-control bg-light">
+                @Model.StartDate.ToString("dd/MM/yyyy")
+                →
+                @Model.EndDate.ToString("dd/MM/yyyy")
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Quilometragem inicial</label>
+            <div class="form-control bg-light">
+                @Model.InitialMileage.ToString("N0") km
+            </div>
+        </div>
+
+    </div>
+
+    <form asp-action="Finish" method="post">
+
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <div class="row">
+            <div class="col-md-6">
+
+                <label for="finalMileage" class="form-label">
+                    Quilometragem final
+                </label>
+
+                <div class="input-group">
+                    <input type="number"
+                           id="finalMileage"
+                           name="finalMileage"
+                           value="@Model.FinalMileage"
+                           min="@Model.InitialMileage"
+                           class="form-control"
+                           placeholder="Introduza a quilometragem final" />
+
+                    <span class="input-group-text">km</span>
+                </div>
+
+                <span class="text-danger">
+                    @Html.ValidationMessage("FinalMileage")
+                </span>
+
+            </div>
+        </div>
+
+        <hr class="my-4" />
+
+        <div class="d-flex justify-content-end gap-2">
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Cancelar
+            </a>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Terminar aluguer
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
