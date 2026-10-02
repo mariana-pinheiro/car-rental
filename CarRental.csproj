@@ -14,5 +14,8 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="CarRental.Tests/**/*.cs" />
+  </ItemGroup>
 
 </Project>
