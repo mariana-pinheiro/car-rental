@@ -8,15 +8,11 @@
 <div class="page-header">
     <div>
         <h1>Editar contrato</h1>
-
-        @if (isActive)
-        {
-            <p>Atualize a data de fim do aluguer ativo.</p>
-        }
-        else
-        {
-            <p>Atualize os dados do aluguer.</p>
-        }
+        <p>
+            @(isActive
+                ? "Atualize a data de fim do aluguer ativo."
+                : "Atualize os dados do aluguer.")
+        </p>
     </div>
 
     <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
@@ -29,59 +25,50 @@
     <div class="mb-4">
         <h2 class="section-title">Dados do contrato</h2>
 
-        @if (isActive)
-        {
-            <p class="section-description">
-                Este aluguer já está ativo. Apenas a data de fim pode ser alterada.
-            </p>
-        }
-        else
-        {
-            <p class="section-description">
-                Altere as informações necessárias.
-            </p>
-        }
+        <p class="section-description">
+            @(isActive
+                ? "Este aluguer já está ativo. Apenas a data de fim pode ser alterada."
+                : "Altere as informações necessárias.")
+        </p>
     </div>
 
     <form asp-action="Edit" method="post">
 
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" name="Id" value="@Model.Id" />
 
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-        <div class="row g-4">
+        @if (isActive)
+        {
+            <input type="hidden" name="ClientId" value="@Model.ClientId" />
 
-            @if (isActive)
-            {
-                <input type="hidden" asp-for="ClientId" />
-                <input type="hidden" asp-for="VehicleId" />
-                <input type="hidden" asp-for="StartDate" />
-                <input type="hidden" asp-for="InitialMileage" />
+            <input type="hidden" name="VehicleId" value="@Model.VehicleId" />
+
+            <input type="hidden" name="StartDate" value="@(Model.StartDate.ToString("yyyy-MM-dd"))" />
+
+            <input type="hidden" name="InitialMileage" value="@Model.InitialMileage" />
+
+            <div class="row g-4">
 
                 <div class="col-md-6">
                     <label class="form-label">Cliente</label>
-
                     <input type="text" class="form-control" value="@ViewBag.ClientName" disabled />
                 </div>
+
                 <div class="col-md-6">
                     <label class="form-label">Veículo</label>
-
                     <input type="text" class="form-control" value="@ViewBag.VehicleDescription" disabled />
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Data de início</label>
-                    <input type="date" class="form-control" value="@Model.StartDate.ToString("yyyy-MM-dd")" disabled />
+                    <input type="date" class="form-control" value="@(Model.StartDate.ToString("yyyy-MM-dd"))" disabled />
                 </div>
 
                 <div class="col-md-6">
-                    <label asp-for="EndDate" class="form-label">
-                        Data de fim
-                    </label>
-
-                    <input asp-for="EndDate" type="date" class="form-control" />
-
-                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                    <label class="form-label">Data de fim</label>
+                    <input name="EndDate" type="date" class="form-control"
+                           value="@(Model.EndDate.ToString("yyyy-MM-dd"))" />
                 </div>
 
                 <div class="col-md-6">
@@ -95,69 +82,71 @@
                         <span class="input-group-text">km</span>
                     </div>
                 </div>
-            }
-            else
-            {
-                <div class="col-md-6">
-                    <label asp-for="ClientId" class="form-label">
-                        Cliente
-                    </label>
 
-                    <select asp-for="ClientId" asp-items="ViewBag.Clients" class="form-select">
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <label class="form-label">Cliente</label>
+                    <select name="ClientId" class="form-select">
                         <option value="">Selecione um cliente</option>
-                    </select>
 
-                    <span asp-validation-for="ClientId" class="text-danger"></span>
+                        @foreach (var client in ViewBag.Clients)
+                        {
+                            <option value="@client.Value" selected="@(client.Value == Model.ClientId.ToString())">
+                                @client.Text
+                            </option>
+                        }
+                    </select>
                 </div>
 
                 <div class="col-md-6">
-                    <label asp-for="VehicleId" class="form-label">
-                        Veículo
-                    </label>
+                    <label class="form-label">Veículo</label>
 
-                    <select asp-for="VehicleId" asp-items="ViewBag.Vehicles" class="form-select">
+                    <select name="VehicleId" class="form-select">
                         <option value="">Selecione um veículo</option>
+
+                        @foreach (var vehicle in ViewBag.Vehicles)
+                        {
+                            <option value="@vehicle.Value" selected="@(vehicle.Value == Model.VehicleId.ToString())">
+                                @vehicle.Text
+                            </option>
+                        }
                     </select>
-
-                    <span asp-validation-for="VehicleId" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6">
-                    <label asp-for="StartDate" class="form-label">
-                        Data de início
-                    </label>
+                    <label class="form-label">Data de início</label>
 
-                    <input asp-for="StartDate" type="date" class="form-control" />
-
-                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                    <input name="StartDate" type="date" class="form-control"
+                           value="@(Model.StartDate.ToString("yyyy-MM-dd"))" />
                 </div>
 
                 <div class="col-md-6">
-                    <label asp-for="EndDate" class="form-label">
-                        Data de fim
-                    </label>
+                    <label class="form-label">Data de fim</label>
 
-                    <input asp-for="EndDate" type="date" class="form-control" />
-
-                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                    <input name="EndDate" type="date" class="form-control"
+                           value="@(Model.EndDate.ToString("yyyy-MM-dd"))" />
                 </div>
 
                 <div class="col-md-6">
-                    <label asp-for="InitialMileage" class="form-label">
+                    <label class="form-label">
                         Quilometragem inicial
                     </label>
 
                     <div class="input-group">
-                        <input asp-for="InitialMileage" type="number" min="0" class="form-control" />
+                        <input name="InitialMileage" type="number" min="0" class="form-control"
+                               value="@Model.InitialMileage" />
 
                         <span class="input-group-text">km</span>
                     </div>
-
-                    <span asp-validation-for="InitialMileage" class="text-danger"></span>
                 </div>
-            }
 
-        </div>
+            </div>
+        }
 
         <hr class="my-4" />
 
